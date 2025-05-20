@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Rat Games</title>
-  <link rel="icon" href="/media/favicon.png" />
-  <link rel="manifest" href="/install/manifest.json" />
-  <meta name="theme-color" content="#000000" />
+  <link rel="icon" href="https://ratgames.netlify.app/media/favicon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#000000">
   <style>
     html, body {
       margin: 0;
@@ -24,7 +24,9 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/install/service-worker.js');
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(() => console.log('Service Worker registered'))
+        .catch(err => console.error('Service Worker error:', err));
     }
   </script>
 </body>
