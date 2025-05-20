@@ -17,10 +17,12 @@
       height: 100%;
       border: none;
     }
+
+    /* Install button styling to match your main site */
     #installBtn {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      top: 10px;
+      right: 60px;
       background-color: #333;
       border: none;
       border-radius: 10px;
@@ -29,43 +31,51 @@
       z-index: 1001;
       transition: background-color 0.3s ease;
       color: white;
-      display: none;
+
+      width: 44px;
+      height: 44px;
+      display: none; /* shown only when available */
+      align-items: center;
+      justify-content: center;
     }
+
     #installBtn:hover {
       background-color: #555;
     }
+
     #installBtn img {
-      width: 32px;
-      height: 32px;
-      vertical-align: middle;
+      max-width: 24px;
+      max-height: 24px;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
   <iframe src="https://ratgames.netlify.app" allowfullscreen></iframe>
 
-  <button id="installBtn">
+  <!-- Install Button -->
+  <button id="installBtn" title="Install App">
     <img src="https://ratgames.netlify.app/media/install.png" alt="Install" />
   </button>
 
   <script>
+    // Register service worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js')
         .then(() => console.log('Service Worker registered'))
         .catch(err => console.error('Service Worker registration failed:', err));
     }
 
+    // Handle install prompt
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
 
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      installBtn.style.display = 'block';
-    });
+      installBtn.style.display = 'flex';
 
-    installBtn.addEventListener('click', () => {
-      if (deferredPrompt) {
+      installBtn.addEventListener('click', () => {
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
@@ -74,9 +84,9 @@
             console.log('PWA installation dismissed');
           }
           deferredPrompt = null;
+          installBtn.style.display = 'none';
         });
-        installBtn.style.display = 'none';
-      }
+      });
     });
   </script>
 </body>
