@@ -1,1 +1,18 @@
-<!DOCTYPE html><html><head><title>Rat Games</title><link rel="icon" href="https://ratgames.netlify.app/media/favicon.png"><style>html,body{margin:0;height:100%;overflow:hidden}iframe{width:100%;height:100%;border:0}</style></head><body><iframe src="https://ratgames.netlify.app" allowfullscreen></iframe></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rat Games</title>
+  <link rel="icon" href="/media/favicon.png" />
+  <link rel="manifest" href="/install/manifest.json" />
+  <meta name="theme-color" content="#000000" />
+</head>
+<body>
+  <h1>Rat Games</h1>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/install/service-worker.js');
+    }
+  </script>
+</body>
+</html>
