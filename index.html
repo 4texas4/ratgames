@@ -17,10 +17,25 @@
       height: 100%;
       border: none;
     }
+    #installBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 64px;
+      height: 64px;
+      cursor: pointer;
+      z-index: 9999;
+      display: none;
+    }
+    #installBtn:hover {
+      filter: brightness(1.2);
+    }
   </style>
 </head>
 <body>
   <iframe src="https://ratgames.netlify.app" allowfullscreen></iframe>
+
+  <img id="installBtn" src="https://ratgames.netlify.app/media/install.png" alt="Install Rat Games" />
 
   <script>
     if ('serviceWorker' in navigator) {
@@ -28,6 +43,30 @@
         .then(() => console.log('Service Worker registered'))
         .catch(err => console.error('Service Worker registration failed:', err));
     }
+
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'block';
+    });
+
+    installBtn.addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('PWA installed');
+          } else {
+            console.log('PWA installation dismissed');
+          }
+          deferredPrompt = null;
+        });
+        installBtn.style.display = 'none';
+      }
+    });
   </script>
 </body>
 </html>
