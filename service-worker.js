@@ -2,7 +2,7 @@ const CACHE_NAME = 'ratgames-cache-v1';
 const urlsToCache = [
   './',
   './index.html',
-  'https://ratgames.netlify.app/media/favicon.png'
+  'https://cty3ctyc42yjmxt3499ctn924u9xaje5y.vercel.app/media/favicon.png'
 ];
 
 self.addEventListener('install', event => {
