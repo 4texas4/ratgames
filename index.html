@@ -6,30 +6,28 @@
   <meta name="theme-color" content="#000000" />
   <style>
     html, body {
-      margin: 0;
-      height: 100%;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      margin: 0; height: 100%; background: white;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: sans-serif;
+      user-select: none;
     }
-
     #installBtn {
       display: none;
-      font-size: 32px;
-      padding: 40px 60px;
+      font-size: 36px;
+      padding: 50px 80px;
       background: black;
       color: white;
       border: none;
-      border-radius: 20px;
+      border-radius: 25px;
       cursor: pointer;
     }
-
     #message {
-      position: absolute;
-      top: 20px;
+      font-size: 22px;
       text-align: center;
-      font-family: sans-serif;
+      margin-bottom: 20px;
+      max-width: 300px;
+      color: black;
     }
   </style>
 </head>
@@ -44,44 +42,36 @@
     let deferredPrompt = null;
 
     if (isPWA) {
-      // You're in the installed PWA, redirect to the game
+      // Installed: redirect to game site directly (no iframe)
       window.location.href = "https://cty3ctyc42yjmxt3499ctn924u9xaje5y.vercel.app";
     }
 
-    // Listen for install availability
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       installBtn.style.display = 'block';
-      message.style.display = 'block';
     });
 
-    // Show error if install is not available
+    installBtn.addEventListener('click', () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choice => {
+        if (choice.outcome === 'accepted') {
+          message.textContent = "Installed! Please open Rat Games from your home screen.";
+          installBtn.style.display = 'none';
+        } else {
+          message.textContent = "You must install to play.";
+        }
+      });
+    });
+
     setTimeout(() => {
       if (!deferredPrompt && !isPWA) {
-        message.textContent = "Your browser doesn't support installation.";
+        message.textContent = "Your browser does not support installing Rat Games.";
       }
     }, 3000);
 
-    // Handle install
-    installBtn.addEventListener('click', () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(choice => {
-          if (choice.outcome === 'accepted') {
-            message.textContent = "Installed. Open Rat Games from your home screen.";
-            installBtn.style.display = 'none';
-          } else {
-            message.textContent = "You must install to continue.";
-          }
-        });
-      }
-    });
-
-    // Optional: Register service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js').catch(() => {});
-    }
+    // No iframe or game content is loaded here unless installed
   </script>
 </body>
 </html>
