@@ -2,36 +2,126 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Install RatGames</title>
   <link rel="manifest" href="manifest.json" />
+  <style>
+    /* Reset and base */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f0f0f0;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 2.5rem 3rem;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    h1 {
+      margin: 0 0 1rem 0;
+      font-weight: 700;
+      font-size: 2.2rem;
+      letter-spacing: 1.2px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+    p {
+      font-size: 1.1rem;
+      color: #d0d0d0;
+      margin-bottom: 2rem;
+      line-height: 1.4;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    button {
+      background: #ffcc00;
+      border: none;
+      padding: 1rem 2.5rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #222;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255,204,0,0.5);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      display: none; /* hidden by default */
+    }
+    button:hover:not(:disabled) {
+      background: #e6b800;
+      box-shadow: 0 8px 25px rgba(230,184,0,0.7);
+    }
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    footer {
+      position: fixed;
+      bottom: 12px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #bbb;
+      user-select: none;
+      font-weight: 500;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+    }
+  </style>
 </head>
 <body>
-  <h1>Install RatGames</h1>
-  <button id="installBtn" style="display:none;">Install App</button>
+  <div class="container">
+    <h1>Welcome to RatGames!</h1>
+    <p>Install the app for quick access and a better gaming experience.</p>
+    <button id="installBtn">Install App</button>
+  </div>
 
   <script>
+    // Redirect if running as installed PWA
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      window.location.href = 'home.html';
+    }
+
     let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
 
     window.addEventListener('beforeinstallprompt', (e) => {
-      console.log('👍 beforeinstallprompt fired');
       e.preventDefault();
       deferredPrompt = e;
-      document.getElementById('installBtn').style.display = 'inline-block';
+      installBtn.style.display = 'inline-block';
     });
 
-    document.getElementById('installBtn').addEventListener('click', async () => {
+    installBtn.addEventListener('click', async () => {
       if (!deferredPrompt) return;
+      installBtn.disabled = true;
       deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
+      const choice = await deferredPrompt.userChoice;
+      if (choice.outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
       deferredPrompt = null;
-      document.getElementById('installBtn').style.display = 'none';
+      installBtn.style.display = 'none';
     });
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').then(() => {
-        console.log('✅ Service worker registered');
+        console.log('Service worker registered');
       }).catch(console.error);
     }
   </script>
+
+  <footer>RatGames PWA © 2025</footer>
 </body>
 </html>
