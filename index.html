@@ -4,24 +4,52 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rat Games</title>
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#000000"/>
+  <style>
+    body { margin: 0; padding: 0; font-family: sans-serif; text-align: center; }
+    #install-btn {
+      display: none;
+      margin-top: 2em;
+      padding: 1em 2em;
+      font-size: 1.2em;
+      cursor: pointer;
+      background-color: #222;
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Loading Rat Games...</h1>
+  <button id="install-btn">Install Rat Games</button>
+
   <script>
     let deferredPrompt;
+    const installBtn = document.getElementById('install-btn');
+
     window.addEventListener('beforeinstallprompt', (e) => {
-      // Stop the mini-infobar from appearing
       e.preventDefault();
       deferredPrompt = e;
+      installBtn.style.display = 'inline-block';  // Show install button
+    });
 
-      // Force install prompt
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome !== 'accepted') {
-            fallback();
-          }
-        });
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) {
+        fallback();
+        return;
       }
+      deferredPrompt.prompt();
+      const choiceResult = await deferredPrompt.userChoice;
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+        installBtn.style.display = 'none';
+      } else {
+        console.log('User dismissed the install prompt');
+        fallback();
+      }
+      deferredPrompt = null;
     });
 
     window.addEventListener('load', () => {
@@ -30,7 +58,7 @@
           if (!deferredPrompt) {
             fallback();
           }
-        }, 2000);
+        }, 3000);
       }
     });
 
@@ -41,13 +69,11 @@
                 scrolling="yes" allowfullscreen frameborder="0"></iframe>`;
     }
 
-    // Register service worker
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js');
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(() => console.log('Service Worker Registered'))
+        .catch(console.error);
     }
   </script>
-</head>
-<body style="margin: 0; padding: 0;">
-  <h1 style="text-align:center;margin-top:2em;">Loading Rat Games...</h1>
 </body>
 </html>
