@@ -45,15 +45,13 @@
         console.log('User accepted the install prompt');
       } else {
         console.log('User dismissed the install prompt, retrying in 5 seconds');
-        // Retry prompt every 5 seconds to force install
         promptInterval = setTimeout(showInstallPrompt, 5000);
       }
     });
   }
 
-  // Register service worker
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
+    navigator.serviceWorker.register('service-worker.js')
       .catch(console.error);
   }
 </script>
