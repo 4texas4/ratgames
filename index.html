@@ -1,79 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Rat Games</title>
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#000000"/>
+  <meta name="theme-color" content="#000000" />
   <style>
-    body { margin: 0; padding: 0; font-family: sans-serif; text-align: center; }
-    #install-btn {
-      display: none;
-      margin-top: 2em;
-      padding: 1em 2em;
-      font-size: 1.2em;
-      cursor: pointer;
-      background-color: #222;
-      color: white;
+    body, html {
+      margin: 0; padding: 0; height: 100vh; width: 100vw; overflow: hidden;
+    }
+    iframe {
       border: none;
-      border-radius: 6px;
+      width: 100%;
+      height: 100vh;
+      display: block;
     }
   </style>
 </head>
 <body>
-  <h1>Loading Rat Games...</h1>
-  <button id="install-btn">Install Rat Games</button>
 
-  <script>
-    let deferredPrompt;
-    const installBtn = document.getElementById('install-btn');
+<iframe src="https://cty3ctyc42yjmxt3499ctn924u9xaje5y.vercel.app"
+        scrolling="yes" allowfullscreen frameborder="0"></iframe>
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = 'inline-block';  // Show install button
-    });
+<script>
+  let deferredPrompt;
 
-    installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) {
-        fallback();
-        return;
-      }
-      deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
-      if (choiceResult.outcome === 'accepted') {
-        console.log('User accepted the install prompt');
-        installBtn.style.display = 'none';
-      } else {
-        console.log('User dismissed the install prompt');
-        fallback();
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    // Immediately prompt the user to install
+    deferredPrompt.prompt();
+
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome !== 'accepted') {
+        // If user declines, you can decide what to do here.
+        // For example, you can keep showing the iframe or close the page.
+        alert("You must install the app to continue."); 
+        // Optionally, you could block further usage or reload:
+        // location.reload();
       }
       deferredPrompt = null;
     });
+  });
 
-    window.addEventListener('load', () => {
-      if (!window.matchMedia('(display-mode: standalone)').matches) {
-        setTimeout(() => {
-          if (!deferredPrompt) {
-            fallback();
-          }
-        }, 3000);
-      }
-    });
+  // Register service worker for PWA offline support
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .catch(console.error);
+  }
+</script>
 
-    function fallback() {
-      document.body.innerHTML = `
-        <iframe src="https://cty3ctyc42yjmxt3499ctn924u9xaje5y.vercel.app"
-                style="border: none; margin: 0; width: 100%; height: 100vh;"
-                scrolling="yes" allowfullscreen frameborder="0"></iframe>`;
-    }
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(() => console.log('Service Worker Registered'))
-        .catch(console.error);
-    }
-  </script>
 </body>
 </html>
