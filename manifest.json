@@ -1,7 +1,7 @@
 {
   "name": "RatGames",
   "short_name": "RatGames",
-  "start_url": "/ratgames/home.html",
+  "start_url": "home.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000"
