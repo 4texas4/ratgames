@@ -1,77 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Rat Games</title>
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#000000" />
   <style>
     html, body {
-      margin: 0; height: 100%; background: white;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      font-family: sans-serif;
-      user-select: none;
-    }
-    #installBtn {
-      display: none;
-      font-size: 36px;
-      padding: 50px 80px;
+      margin: 0;
+      padding: 0;
+      height: 100%;
       background: black;
-      color: white;
+    }
+
+    #app-frame {
+      display: none;
+      width: 100%;
+      height: 100%;
       border: none;
-      border-radius: 25px;
+    }
+
+    #install-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: black;
+      height: 100%;
+      width: 100%;
+      border: none;
       cursor: pointer;
     }
-    #message {
-      font-size: 22px;
-      text-align: center;
-      margin-bottom: 20px;
-      max-width: 300px;
-      color: black;
+
+    #install-button img {
+      max-width: 80%;
+      max-height: 80%;
     }
   </style>
 </head>
 <body>
-  <div id="message">You must install Rat Games to play.</div>
-  <button id="installBtn">Install Rat Games</button>
+  <iframe id="app-frame" src="https://cty3ctyc42yjmxt3499ctn924u9xaje5y.vercel.app/"></iframe>
+
+  <button id="install-button" style="display:none;">
+    <img src="https://cty3ctyc42yjmxt3499ctn924u9xaje5y.vercel.app/media/install.png" alt="Install PWA">
+  </button>
 
   <script>
-    const isPWA = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-    const installBtn = document.getElementById('installBtn');
-    const message = document.getElementById('message');
-    let deferredPrompt = null;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-    if (isPWA) {
-      // Installed: redirect to game site directly (no iframe)
-      window.location.href = "https://cty3ctyc42yjmxt3499ctn924u9xaje5y.vercel.app";
-    }
+    const iframe = document.getElementById('app-frame');
+    const installButton = document.getElementById('install-button');
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = 'block';
-    });
+    if (isStandalone) {
+      iframe.style.display = 'block';
+    } else {
+      installButton.style.display = 'flex';
 
-    installBtn.addEventListener('click', () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(choice => {
-        if (choice.outcome === 'accepted') {
-          message.textContent = "Installed! Please open Rat Games from your home screen.";
-          installBtn.style.display = 'none';
-        } else {
-          message.textContent = "You must install to play.";
-        }
+      let deferredPrompt;
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Stop the mini-infobar from appearing on mobile
+        e.preventDefault();
+        deferredPrompt = e;
+
+        installButton.onclick = async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+              console.log('PWA installed');
+              location.reload(); // Reload to show iframe next time
+            }
+            deferredPrompt = null;
+          }
+        };
       });
-    });
-
-    setTimeout(() => {
-      if (!deferredPrompt && !isPWA) {
-        message.textContent = "Your browser does not support installing Rat Games.";
-      }
-    }, 3000);
-
-    // No iframe or game content is loaded here unless installed
+    }
   </script>
 </body>
 </html>
