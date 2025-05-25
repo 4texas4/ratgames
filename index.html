@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Install Rat Games</title>
+  <title>Install RatGames</title>
   <link rel="manifest" href="manifest.json" />
   <style>
-    /* Reset and base */
+    /* (same styles as before) */
     * {
       box-sizing: border-box;
     }
@@ -20,7 +20,6 @@
       overflow: hidden;
       position: relative;
     }
-    /* Background GIF */
     body::before {
       content: "";
       position: fixed;
@@ -100,7 +99,7 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="container">
     <h1>Welcome to RatGames!</h1>
     <p>Install the app for quick access and a better gaming experience.</p>
     <button id="installBtn">Install App</button>
@@ -114,6 +113,7 @@
 
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
+    const container = document.getElementById('container');
 
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -128,8 +128,11 @@
       const choice = await deferredPrompt.userChoice;
       if (choice.outcome === 'accepted') {
         console.log('User accepted the install prompt');
+        // Change content after install accepted
+        container.innerHTML = '<h1>Restart The App</h1>';
       } else {
         console.log('User dismissed the install prompt');
+        installBtn.disabled = false; // re-enable button if dismissed
       }
       deferredPrompt = null;
       installBtn.style.display = 'none';
