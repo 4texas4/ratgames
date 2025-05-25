@@ -25,27 +25,33 @@
 
 <script>
   let deferredPrompt;
+  let promptInterval;
 
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
+    showInstallPrompt();
+  });
 
-    // Immediately prompt the user to install
+  function showInstallPrompt() {
+    if (!deferredPrompt) return;
+
     deferredPrompt.prompt();
 
     deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome !== 'accepted') {
-        // If user declines, you can decide what to do here.
-        // For example, you can keep showing the iframe or close the page.
-        alert("You must install the app to continue."); 
-        // Optionally, you could block further usage or reload:
-        // location.reload();
+      if (choiceResult.outcome === 'accepted') {
+        clearInterval(promptInterval);
+        deferredPrompt = null;
+        console.log('User accepted the install prompt');
+      } else {
+        console.log('User dismissed the install prompt, retrying in 5 seconds');
+        // Retry prompt every 5 seconds to force install
+        promptInterval = setTimeout(showInstallPrompt, 5000);
       }
-      deferredPrompt = null;
     });
-  });
+  }
 
-  // Register service worker for PWA offline support
+  // Register service worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js')
       .catch(console.error);
