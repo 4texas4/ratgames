@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Proxy RatGames</title>
+  <title>Rat Games</title>
+  <link rel="icon" href="icon.png" type="image/png" />
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      overflow: hidden; /* 🔥 disables page scrollbars */
+      overflow: hidden;
       height: 100%;
     }
     iframe {
@@ -15,7 +16,7 @@
       width: 100vw;
       height: 100vh;
       border: none;
-      overflow: hidden; /* 🔥 disables iframe's own scrollbars (visually) */
+      overflow: hidden;
     }
   </style>
 </head>
@@ -55,11 +56,11 @@
           const btn = e.target.closest('button.home-button');
           if (btn) {
             e.preventDefault();
-            loadProxiedPage(); // Reload homepage through proxy
+            loadProxiedPage();
           }
         });
 
-        // Optional: Disable scroll inside iframe's HTML (if scroll still appears)
+        // Disable scroll inside iframe content
         doc.documentElement.style.overflow = 'hidden';
         doc.body.style.overflow = 'hidden';
       } catch (err) {
@@ -67,7 +68,6 @@
       }
     });
 
-    // Load homepage initially
     loadProxiedPage();
   </script>
 </body>
