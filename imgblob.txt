@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Open Rat Games</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background: black;
+      cursor: pointer;
+    }
+    img {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* 👈 makes sure entire GIF fits without cropping */
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <img src="https://ratgames.vercel.app/media/rat-spinning.gif" alt="Rat Spinning" />
+
+  <script>
+    const code = `<!DOCTYPE html>
+<html>
+<head>
+  <title>Rat Games</title>
+  <link rel="icon" href="icon.png" type="image/png" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+    }
+    iframe {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="ratframe"></iframe>
+
+  <script>
+    (function() {
+      const proxy = "https://corsproxy.io/?";
+      const baseUrl = "https://ratgames.vercel.app";
+      const iframe = document.getElementById("ratframe");
+
+      function loadProxiedPage(url = baseUrl) {
+        fetch(proxy + url)
+          .then(res => res.text())
+          .then(html => {
+            html = html.replace(/(src|href)=["'](?!https?:\\/\\/|\\/\\/|#|\\/)/g, '$1="' + baseUrl + '/');
+            html = html.replace(/(src|href)=["']\\//g, '$1="' + baseUrl + '/');
+            html = html.replace(/<head>/i, '<head><base href="' + baseUrl + '/">');
+            const blob = new Blob([html], { type: "text/html" });
+            const blobURL = URL.createObjectURL(blob);
+            iframe.src = blobURL;
+          })
+          .catch(err => {
+            document.body.innerHTML = "<h1>Failed to load site through proxy</h1><pre>" + err + "</pre>";
+          });
+      }
+
+      iframe.addEventListener("load", () => {
+        try {
+          const doc = iframe.contentDocument || iframe.contentWindow.document;
+          doc.addEventListener("click", e => {
+            const btn = e.target.closest("button.home-button");
+            if (btn) {
+              e.preventDefault();
+              loadProxiedPage();
+            }
+          });
+          doc.documentElement.style.overflow = "hidden";
+          doc.body.style.overflow = "hidden";
+        } catch (err) {
+          console.warn("Could not attach inside iframe:", err);
+        }
+      });
+
+      loadProxiedPage();
+    })();
+  <\/script>
+
+</body>
+</html>`;
+
+    document.body.addEventListener('click', () => {
+      const blob = new Blob([code], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    });
+  </script>
+</body>
+</html>
