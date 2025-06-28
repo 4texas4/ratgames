@@ -10,7 +10,7 @@
       height: 100%;
       width: 100%;
       overflow: hidden;
-      background: black;
+      background: #02133E; /* ✅ New background color */
       cursor: pointer;
     }
     img {
@@ -19,7 +19,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: contain; /* 👈 makes sure entire GIF fits without cropping */
+      object-fit: contain; /* Show entire image, no cropping */
       display: block;
     }
   </style>
