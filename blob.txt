@@ -65,7 +65,7 @@
 
   <script>
     (function() {
-      const proxy = "https://corsproxy.io/?";
+      const proxy = "https://ratproxy.vercel.app/?";
       const baseUrl = "https://ratgames.vercel.app";
       const iframe = document.getElementById("ratframe");
 
