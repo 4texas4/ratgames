@@ -41,7 +41,7 @@
   const code = `<!DOCTYPE html>
 <html>
 <head>
-  <title>New Tab</title>
+  <title>‎ </title>
   <link rel="icon" href="icon.png" type="image/png" />
   <style>
     html, body {
