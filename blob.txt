@@ -41,7 +41,7 @@
   const code = `<!DOCTYPE html>
 <html>
 <head>
-  <title>‎Rat Games</title>
+  <title>‎</title>
   <link rel="icon" href="icon.png" type="image/png" />
   <style>
     html, body {
