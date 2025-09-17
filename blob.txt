@@ -1,120 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Open Rat Games</title>
-  <style>
-    body {
-      background: #111;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      font-family: sans-serif;
-    }
-    button {
-      background: #000;
-      color: #fff;
-      border: none;
-      padding: 36px 72px;
-      font-size: 48px;
-      font-weight: bold;
-      border-radius: 12px;
-      cursor: pointer;
-      min-width: 400px;
-      font-family: "Comic Sans MS", cursive, sans-serif;
-      transition: background-color 0.25s ease;
-    }
-    button:hover {
-      background: #222;
-    }
-  </style>
-</head>
-<body>
-
-<button id="runBtn">Open Rat Games</button>
-
-<script>
-  const runBtn = document.getElementById('runBtn');
-
-  const code = `<!DOCTYPE html>
-<html>
-<head>
-  <title>‎</title>
-  <link rel="icon" href="icon.png" type="image/png" />
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      height: 100%;
-    }
-    iframe {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      border: none;
-      overflow: hidden;
-    }
-  </style>
-</head>
-<body>
-  <iframe id="ratframe"></iframe>
-
-  <script>
-    (function() {
-      const proxy = "https://ratproxy.vercel.app/?";
-      const baseUrl = "https://ratgames.vercel.app";
-      const iframe = document.getElementById("ratframe");
-
-      function loadProxiedPage(url = baseUrl) {
-        fetch(proxy + url)
-          .then(res => res.text())
-          .then(html => {
-            html = html.replace(/(src|href)=["'](?!https?:\\/\\/|\\/\\/|#|\\/)/g, '$1="' + baseUrl + '/');
-            html = html.replace(/(src|href)=["']\\//g, '$1="' + baseUrl + '/');
-            html = html.replace(/<head>/i, '<head><base href="' + baseUrl + '/">');
-            const blob = new Blob([html], { type: "text/html" });
-            const blobURL = URL.createObjectURL(blob);
-            iframe.src = blobURL;
-          })
-          .catch(err => {
-            document.body.innerHTML = "<h1>Failed to load site through proxy</h1><pre>" + err + "</pre>";
-          });
-      }
-
-      iframe.addEventListener("load", () => {
-        try {
-          const doc = iframe.contentDocument || iframe.contentWindow.document;
-          doc.addEventListener("click", e => {
-            const btn = e.target.closest("button.home-button");
-            if (btn) {
-              e.preventDefault();
-              loadProxiedPage();
-            }
-          });
-          doc.documentElement.style.overflow = "hidden";
-          doc.body.style.overflow = "hidden";
-        } catch (err) {
-          console.warn("Could not attach inside iframe:", err);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Tab</title>
+    <style>
+        /* Global reset for consistent styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-      });
 
-      loadProxiedPage();
-    })();
-  <\/script>
+        /* Use Flexbox to center the button vertically and horizontally */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
 
-</body>
-</html>`;
+        /* Button styling for a cleaner, modern look */
+        .clean-button {
+            padding: 20px 40px; /* Reduced padding for a less bulky button */
+            font-size: 20px; /* Slightly smaller font size */
+            font-weight: 500; /* Medium font weight for a refined look */
+            color: black;
+            background-color: white;
+            border: none; /* No border for a cleaner appearance */
+            border-radius: 8px; /* More modern, subtle roundness */
+            cursor: pointer;
+            outline: none; /* Removes the default blue outline on click */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Lighter, more subtle shadow */
+            transition: all 0.2s ease-in-out; /* Smooth transition for all changes */
+        }
 
-  runBtn.addEventListener('click', () => {
-    const blob = new Blob([code], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-  });
-</script>
+        .clean-button:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Lifts the button with a larger shadow */
+            transform: translateY(-3px); /* Moves the button up for a "lifting" effect */
+        }
+
+        .clean-button:active {
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Pushes the button down with a smaller shadow */
+            transform: translateY(0); /* Resets position for a "pressed" effect */
+        }
+        
+        /* CSS for the fullscreen iframe inside the blob URL */
+        .fullscreen-iframe {
+            height: 100vh;
+            width: 100vw;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="clean-button" onclick="openBlobUrl()">Open</button>
+
+    <script>
+        function openBlobUrl() {
+            const iframeContent = `
+                <!DOCTYPE html>
+                <html>
+                    <head>
+                        <title>New Tab</title>
+                        <style>
+                            /* Remove all margins and padding for the fullscreen effect */
+                            html, body, iframe {
+                                margin: 0;
+                                padding: 0;
+                                border: none;
+                                overflow: hidden; /* Prevents scrollbars */
+                            }
+                            iframe {
+                                height: 100vh;
+                                width: 100vw;
+                                display: block;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <iframe src="https://ratgames.vercel.app" allowfullscreen></iframe>
+                    </body>
+                </html>
+            `;
+
+            const blob = new Blob([iframeContent], {type: 'text/html'});
+            const blobUrl = URL.createObjectURL(blob);
+            const newWindow = window.open(blobUrl, '_blank');
+
+            if (newWindow) {
+                newWindow.addEventListener('unload', () => {
+                    URL.revokeObjectURL(blobUrl);
+                });
+            }
+        }
+    </script>
 
 </body>
 </html>
