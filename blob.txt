@@ -241,7 +241,7 @@
 <script>
 /* Configuration: order and labels */
 const options = [
-  { src: "http://4texas4.github.io/ratgames/m7bc3v.png", title: "New Tab" },                 // default first
+  { src: "https://4texas4.github.io/ratgames/m7bc3v.png", title: "New Tab" },                 // default first
   { src: "https://5-t.vercel.app/assets/img/docs.webp", title: "Google Docs" },
   { src: "https://www.gstatic.com/classroom/logo_square_rounded.svg", title: "Classes" },
   { src: "https://www.google.com/favicon.ico", title: "Google" },
