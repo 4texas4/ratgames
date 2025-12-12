@@ -52,9 +52,9 @@
 </head>
 <body>
   <div class="container">
-    <img src="https://ratgames.vercel.app/media/tufflogo.png" alt="Rat Games" class="logo">
+    <img src="https://4texas4.github.io/media/tufflogo.png" alt="Rat Games" class="logo">
     <p>Rat Games is <strong>not to be used at school</strong>. Please use it at home instead:</p>
-    <a href="https://ratgames.vercel.app" target="_blank">https://ratgames.vercel.app</a>
+    <a href="https://ratgames.vercel.app" target="_blank">https://4texas4.github.io</a>
     <p>Join our Discord for updates and home links:</p>
     <a href="https://discord.gg/6Sp3DJMvCU" target="_blank">https://discord.gg/6Sp3DJMvCU</a>
   </div>
